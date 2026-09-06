@@ -8,10 +8,14 @@ st.set_page_config(page_title="Customer Churn Risk Dashboard", layout="wide")
 
 @st.cache_resource
 def load_model():
-    model = joblib.load("churn_random_forest_model.pkl")
-    feature_columns = joblib.load("feature_columns.pkl")
-    return model, feature_columns
-
+    
+    try:
+        model = joblib.load("churn_random_forest_model.pkl")
+        feature_columns = joblib.load("feature_columns.pkl")
+    except Exception as e:
+        st.error(f"Could not load the trained model files: {e}")
+        st.stop()        
+    return model, feature_columns        
 model, feature_columns = load_model()
 
 CHOSEN_THRESHOLD = 0.35
@@ -145,14 +149,21 @@ else:
     uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
 
     if uploaded_file is not None:
-        raw_df = pd.read_csv(uploaded_file)
+        try:
+            raw_df = pd.read_csv(uploaded_file)
+        except Exception as e:
+            st.error(f"Could not read this file as a CSV: {e}")
+            st.stop()
         if "Churn" in raw_df.columns:
             raw_df = raw_df.drop(columns=["Churn"])
-
+        required_columns = ["tenure", "MonthlyCharges", "TotalCharges", "Contract"]
+        missing_cols = [c for c in required_columns if c not in raw_df.columns]
+        if missing_cols:
+            st.error(f"This CSV is missing required column(s): {', '.join(missing_cols)}")
+            st.stop()
         X_batch, original_df = preprocess_batch(raw_df)
         probas = model.predict_proba(X_batch)[:, 1]
         bands = [risk_band(p) for p in probas]
-
         results = original_df.copy()
         results["churn_probability"] = probas
         results["risk_band"] = bands
