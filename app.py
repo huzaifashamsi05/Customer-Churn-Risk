@@ -26,8 +26,8 @@ st.markdown("""
     --border: rgba(148, 163, 184, 0.14);
 }
 
-html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
-h1, h2, h3, .hero-title { font-family: 'Sora', sans-serif; }
+html, body, [class*="css"] { font-family: 'Inter', 'Segoe UI Emoji', 'Noto Color Emoji', 'Apple Color Emoji', sans-serif; }
+h1, h2, h3, .hero-title { font-family: 'Sora', 'Segoe UI Emoji', 'Noto Color Emoji', 'Apple Color Emoji', sans-serif; }
 
 .stApp {
     background:
@@ -89,7 +89,7 @@ section[data-testid="stSidebar"] .stRadio label { color: var(--text-hi) !importa
     border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1.2rem;
 }
 [data-testid="stMetricLabel"] { color: var(--text-lo) !important; }
-[data-testid="stMetricValue"] { color: var(--text-hi) !important; font-family: 'Sora', sans-serif; }
+[data-testid="stMetricValue"] { color: var(--text-hi) !important; font-family: 'Sora', 'Segoe UI Emoji', 'Noto Color Emoji', 'Apple Color Emoji', sans-serif; }
 
 [data-testid="stAlert"] { border-radius: 12px; }
 [data-testid="stDataFrame"] { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
@@ -108,7 +108,46 @@ h1, h2, h3 { color: var(--text-hi); }
 .result-card.medium { background: linear-gradient(135deg, rgba(245,158,11,0.14), rgba(245,158,11,0.03)); border-color: rgba(245,158,11,0.35); }
 .result-card.low { background: linear-gradient(135deg, rgba(34,197,94,0.14), rgba(34,197,94,0.03)); border-color: rgba(34,197,94,0.35); }
 .result-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-.result-prob { font-family: 'Sora', sans-serif; font-size: 2.4rem; font-weight: 800; color: var(--text-hi); }
+.result-prob { font-family: 'Sora', 'Segoe UI Emoji', 'Noto Color Emoji', 'Apple Color Emoji', sans-serif; font-size: 2.4rem; font-weight: 800; color: var(--text-hi); }
+
+/* Sidebar mode selector - card style */
+section[data-testid="stSidebar"] div[role="radiogroup"] {
+    gap: 0.6rem;
+    display: flex;
+    flex-direction: column;
+}
+section[data-testid="stSidebar"] div[role="radiogroup"] > label {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    margin: 0 !important;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
+    border-color: rgba(52,211,153,0.4);
+    transform: translateX(2px);
+}
+section[data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) {
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    border-color: transparent;
+}
+section[data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) p {
+    color: #04140f !important;
+    font-weight: 700;
+}
+section[data-testid="stSidebar"] div[role="radiogroup"] > label p {
+    color: var(--text-hi);
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+section[data-testid="stSidebar"] div[role="radiogroup"] > label > div:first-child {
+    display: none;
+}
+section[data-testid="stSidebar"] .stRadio > label {
+    display: none;
+}
 .result-band {
     display: inline-block; font-weight: 700; font-size: 0.85rem;
     padding: 0.35rem 0.9rem; border-radius: 999px; margin-top: 0.3rem;
@@ -229,7 +268,13 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-mode = st.sidebar.radio("Mode", ["Single Customer Check", "Batch Upload (CSV)"])
+st.sidebar.markdown('<p class="section-label" style="margin-top:0;">Navigate</p>', unsafe_allow_html=True)
+mode = st.sidebar.radio(
+    "Mode",
+    ["👤  Single Customer Check", "📁  Batch Upload (CSV)"],
+    label_visibility="collapsed",
+)
+mode = "Single Customer Check" if "Single" in mode else "Batch Upload (CSV)"
 
 band_class = {"High Risk": "high", "Medium Risk": "medium", "Low Risk": "low"}
 
