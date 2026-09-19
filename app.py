@@ -26,7 +26,7 @@ st.markdown("""
     --border: rgba(148, 163, 184, 0.14);
 }
 
-html, body, [class*="css"] { font-family: 'Inter', 'Segoe UI Emoji', 'Noto Color Emoji', 'Apple Color Emoji', sans-serif; }
+html, body, [class*="st-emotion-cache"] { font-family: 'Inter', 'Segoe UI Emoji', 'Noto Color Emoji', 'Apple Color Emoji', sans-serif; }
 h1, h2, h3, .hero-title { font-family: 'Sora', 'Segoe UI Emoji', 'Noto Color Emoji', 'Apple Color Emoji', sans-serif; }
 
 .stApp {
@@ -112,26 +112,48 @@ h1, h2, h3 { color: var(--text-hi); }
 
 /* Sidebar mode selector - card style */
 section[data-testid="stSidebar"] div[role="radiogroup"] {
-    gap: 0.6rem;
+    gap: 0.7rem;
     display: flex;
     flex-direction: column;
+    margin-top: 0.3rem;
 }
 section[data-testid="stSidebar"] div[role="radiogroup"] > label {
-    background: rgba(255,255,255,0.03);
+    position: relative;
+    background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 0.85rem 1rem;
+    border-radius: 14px;
+    padding: 1rem 1.1rem 1rem 1.3rem;
     margin: 0 !important;
     cursor: pointer;
-    transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+    box-shadow: 0 2px 10px -4px rgba(0,0,0,0.4);
+    transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+section[data-testid="stSidebar"] div[role="radiogroup"] > label::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 12%;
+    height: 76%;
+    width: 4px;
+    border-radius: 0 4px 4px 0;
+    background: transparent;
+    transition: background 0.18s ease;
 }
 section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
-    border-color: rgba(52,211,153,0.4);
-    transform: translateX(2px);
+    border-color: rgba(52,211,153,0.45);
+    transform: translateX(3px);
+    box-shadow: 0 6px 18px -6px rgba(52,211,153,0.25);
+}
+section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover::before {
+    background: rgba(52,211,153,0.5);
 }
 section[data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) {
     background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
     border-color: transparent;
+    box-shadow: 0 10px 26px -8px rgba(52,211,153,0.55);
+    transform: translateX(3px);
+}
+section[data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked)::before {
+    background: rgba(4,20,15,0.35);
 }
 section[data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) p {
     color: #04140f !important;
@@ -139,8 +161,10 @@ section[data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checke
 }
 section[data-testid="stSidebar"] div[role="radiogroup"] > label p {
     color: var(--text-hi);
-    font-size: 0.92rem;
+    font-size: 0.95rem;
     font-weight: 600;
+    letter-spacing: -0.01em;
+    font-family: 'Inter', 'Segoe UI Emoji', 'Noto Color Emoji', 'Apple Color Emoji', sans-serif;
 }
 section[data-testid="stSidebar"] div[role="radiogroup"] > label > div:first-child {
     display: none;
@@ -257,7 +281,7 @@ def preprocess_batch(raw_df):
 st.markdown("""
 <div class="hero-wrap">
     <span class="hero-eyebrow">Machine Learning · Random Forest</span>
-    <h1 class="hero-title">📊 Customer Churn <span>Risk Dashboard</span></h1>
+    <div class="hero-title">📊 Customer Churn <span>Risk Dashboard</span></div>
     <p class="hero-sub">Predict which customers are likely to leave, understand why, and get a
     recommended retention action — one customer at a time or in bulk.</p>
     <div class="hero-badges">
@@ -268,7 +292,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.sidebar.markdown('<p class="section-label" style="margin-top:0;">Navigate</p>', unsafe_allow_html=True)
+st.sidebar.markdown('<p class="section-label" style="margin-top:0;">Choose Analysis Mode</p>', unsafe_allow_html=True)
 mode = st.sidebar.radio(
     "Mode",
     ["👤  Single Customer Check", "📁  Batch Upload (CSV)"],
